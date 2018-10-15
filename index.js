@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function() {
     fetchAll();
     load50();
     addNewMonsterListener();
-    addPageListener();
+    addPageListener(); 
 })
 
 function fetchAll(){
