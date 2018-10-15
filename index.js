@@ -1,4 +1,7 @@
 
+
+// Srikant Kumar Kalaputapu
+
 let num = 1;
 let max = 10;
 
@@ -6,12 +9,14 @@ document.addEventListener("DOMContentLoaded", function() {
     fetchAll();
     load50();
     addNewMonsterListener();
-    addPageListener(); 
+    addPageListener();
 })
 
 function fetchAll(){
     fetch('http://localhost:3000/monsters')
-    .then(resp => resp.json())
+    .then(resp => resp.json(),function(error){
+        alert(`Please run server with command 'json-server monsters.json'`)
+    })
     .then(json => max = Math.floor(json.length / 50));
 
 }
