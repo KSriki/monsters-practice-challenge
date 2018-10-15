@@ -1,17 +1,31 @@
+
+let num = 1;
+let max = 10;
+
 document.addEventListener("DOMContentLoaded", function() {
+    fetchAll();
     load50();
     addNewMonsterListener();
     addPageListener();
 })
 
+function fetchAll(){
+    fetch('http://localhost:3000/monsters')
+    .then(resp => resp.json())
+    .then(json => max = Math.floor(json.length / 50));
+
+}
+
 function render(json){
-    let list = document.getElementById("monster-list");
-    // debugger;
-    let row = document.createElement("li");
-    row.innerHTML = `ID: ${json.id}, Name: ${json.name}`;
-    // debugger;
-    row.innerHTML += `<ul><li>Age: ${json.age}</li> <li>Description: ${json.description}</li></ul>`;
-    list.appendChild(row);
+    if(json){
+        let list = document.getElementById("monster-list");
+        // debugger;
+        let row = document.createElement("li");
+        row.innerHTML = `ID: ${json.id}, Name: ${json.name}`;
+        // debugger;
+        row.innerHTML += `<ul><li>Age: ${json.age}</li> <li>Description: ${json.description}</li></ul>`;
+        list.appendChild(row);
+    }
 }
 function render50(json) {
     let results = document.getElementById("monster-container");
@@ -57,8 +71,12 @@ function fetchNewMonster() {
         body: JSON.stringify(data)
 
     })
+    //weird but works
+
+    fetch("http://localhost:3000/monsters")
     .then(resp => resp.json())
-    .then(json => render(json))
+    .then(function(json) {fetchPage(Math.floor(json.length/50)+1)})
+
 }
 
 
@@ -72,18 +90,25 @@ function addNewMonsterListener() {
     });
 }
 
-function fetchPage(num){
-    // debugger;
-    let mons = fetch(`http://localhost:3000/monsters/?_limit=50&_page=${num}`)
+function fetchPage(number){
+
+    let mons = fetch(`http://localhost:3000/monsters/?_limit=50&_page=${number}`)
     mons.then(resp => resp.json()).then(json => render50(json));
+    num = number;
+    if(num > max){
+        max = num;
+    }
 }
 
 function addPageListener(){
 
     let forward = document.getElementById("forward");
-    let num = 1;
+
     forward.addEventListener("click",function(){
             num+=1;
+            if(num > max){
+                num = max;
+            }
             fetchPage(num);
 
     });
